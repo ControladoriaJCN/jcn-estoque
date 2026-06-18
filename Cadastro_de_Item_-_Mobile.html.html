@@ -593,7 +593,7 @@ let currentUser = null, DB = [], checkTimer = null, hasWarning = false;
 let itemList = [], unsubscribe = null;
 
 // ── SCREEN NAV ────────────────────────────────────────────────────────────────
-function showScreen(id) {
+window.showScreen = function(id) {
   document.querySelectorAll('.lscreen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   ['login_err','reg_err','reg_ok','rst_err','rst_ok'].forEach(e => {
@@ -601,7 +601,7 @@ function showScreen(id) {
   });
 }
 
-function pinStr(barId, val) {
+window.pinStr = function(barId, val) {
   const pct = val.length<4 ? val.length/4*30 : val.length===4 ? 55 : val.length===5 ? 78 : 100;
   const col = val.length<4 ? '#c0392b' : val.length===4 ? '#e07b2a' : val.length===5 ? '#B6D559' : '#538557';
   const b = document.getElementById(barId);
@@ -625,7 +625,7 @@ function getLocalUsers() {
 }
 function saveLocalUsers(u) { localStorage.setItem('jcn_users', JSON.stringify(u)); }
 
-function doLogin() {
+window.doLogin = function() {
   const nome = document.getElementById('login_nome').value.trim().toUpperCase();
   const pin  = document.getElementById('login_pin').value.trim();
   const err  = document.getElementById('login_err');
@@ -642,7 +642,7 @@ function doLogin() {
   loadDB();
 }
 
-function doRegister() {
+window.doRegister = function() {
   const nome = document.getElementById('reg_nome').value.trim().toUpperCase();
   const pin  = document.getElementById('reg_pin').value.trim();
   const pin2 = document.getElementById('reg_pin2').value.trim();
@@ -662,7 +662,7 @@ function doRegister() {
   setTimeout(() => { showScreen('screenLogin'); document.getElementById('login_nome').value = nome; document.getElementById('login_pin').focus(); }, 1800);
 }
 
-function doReset() {
+window.doReset = function() {
   const nome = document.getElementById('rst_nome').value.trim().toUpperCase();
   const pin  = document.getElementById('rst_pin').value.trim();
   const pin2 = document.getElementById('rst_pin2').value.trim();
@@ -683,7 +683,7 @@ function doReset() {
   setTimeout(() => { showScreen('screenLogin'); document.getElementById('login_nome').value = nome; document.getElementById('login_pin').focus(); }, 1800);
 }
 
-function doLogout() {
+window.doLogout = function() {
   if (unsubscribe) { unsubscribe(); unsubscribe = null; }
   currentUser = null;
   document.getElementById('loginOverlay').style.display = 'flex';
@@ -760,8 +760,8 @@ function searchSimilar(d, c) {
 }
 
 // ── INPUT HANDLERS ────────────────────────────────────────────────────────────
-function onDescricaoInput(v) { scheduleCheck(); }
-function onCodigoInput(v) { scheduleCheck(); }
+window.onDescricaoInput = function(v) { scheduleCheck(); }
+window.onCodigoInput = function(v) { scheduleCheck(); }
 function scheduleCheck() {
   hideAlerts(); clearTimeout(checkTimer);
   const d = document.getElementById('f_descricao').value.trim();
@@ -813,13 +813,13 @@ function updateCatalogoReq() {
     if (h) h.className = 'field-hint';
   }
 }
-function onMarcaSelect(v) {
+window.onMarcaSelect = function(v) {
   updateCatalogoReq();
   const mi = document.getElementById('f_marca');
   if (v === 'OUTRA') { mi.style.display = 'block'; mi.focus(); mi.value = ''; }
   else { mi.style.display = 'none'; mi.value = ''; }
 }
-function validateField(id) {
+window.validateField = function(id) {
   const el = document.getElementById(id);
   const hint = document.getElementById('hint_' + id);
   if (!hint) return;
@@ -841,11 +841,11 @@ function validateAll() {
   if (isJohnDeere()) { validateField('f_codigo_fab'); if (!document.getElementById('f_codigo_fab').value.trim()) ok = false; }
   return ok;
 }
-function updateCharCount(el) { document.getElementById('obs_count').textContent = el.value.length + ' / 300'; }
+window.updateCharCount = function(el) { document.getElementById('obs_count').textContent = el.value.length + ' / 300'; }
 
 // ── GRUPOS × ESTOQUE ──────────────────────────────────────────────────────────
 const GRUPO_ESTOQUE = {'ADJUVANTES/OLEOS':true,'AERONAVES':false,'BRIQUETE DE ALGODÃO':false,'CONSTRUÇÃO CIVIL':false,'EPI EPC MEDICAMENTOS':true,'FEROMONIO':true,'FERRAMENTAS':false,'FERTILIZANTE/CORRETIVO':true,'FUNGICIDAS':true,'HERBICIDAS':true,'HIGIENE E LIMPEZA':false,'INOCULANTES':true,'INSETICIDAS':true,'LUBRIFICANTES':true,'MATERIAIS AUXILIARES':true,'MATERIAIS PECUARIOS':true,'MATERIAL ESCRITÓRIO':false,'MEDICAMENTOS VETERIN':true,'MOVEIS UTENSI ELETRO':false,'NEMATICIDAS':true,'PEÇAS E ACES INDUS':true,'PEÇAS E ACES MÁQUINA':true,'PEÇAS E ACES VEÍCULO':true,'PNEUS E CAMARAS':true,'RAÇÕES E SUPLEMENTOS':true,'REFEITÓRIO / COZINHA':false,'REG. CRESCIMENTO':true,'SEMENTES E MUDAS':true,'TECNO. DA INFORMAÇÃO':false};
-function onGrupoChange(val) {
+window.onGrupoChange = function(val) {
   const toggle = document.getElementById('f_estoque');
   const notif  = document.getElementById('estoqueNotif');
   if (!val) {
@@ -863,7 +863,7 @@ function onGrupoChange(val) {
 }
 
 // ── DRAFT ─────────────────────────────────────────────────────────────────────
-function saveDraft() {
+window.saveDraft = function() {
   const d = {};
   ['f_descricao','f_codigo_fab','f_local','f_obs'].forEach(id => { const el=document.getElementById(id); if(el) d[id]=el.value; });
   ['f_unidade','f_tipo','f_grupo','f_marca_sel'].forEach(id => { const el=document.getElementById(id); if(el) d[id]=el.value; });
@@ -883,7 +883,7 @@ function loadDraft() {
 function clearDraft() { localStorage.removeItem('jcn_draft'); }
 
 // ── ITEM LIST ─────────────────────────────────────────────────────────────────
-function adicionarItem() {
+window.adicionarItem = function() {
   if (!validateAll()) { showToast('Preencha os campos obrigatórios (*)','warn'); return; }
   const cod = document.getElementById('f_codigo_fab').value.trim();
   if (cod) {
@@ -944,9 +944,9 @@ function renderItemList() {
     rows.appendChild(row);
   });
 }
-function removerItem(idx) { itemList.splice(idx, 1); renderItemList(); }
+window.removerItem = function(idx) { itemList.splice(idx, 1); renderItemList(); }
 
-function showConfirm() {
+window.showConfirm = function() {
   if (itemList.length === 0) { showToast('Adicione ao menos um item.','warn'); return; }
   const list = document.getElementById('confirmItemsList'); list.innerHTML = '';
   itemList.forEach((item, i) => {
@@ -956,8 +956,8 @@ function showConfirm() {
   document.getElementById('btnConfirmSend').textContent = '✓ Enviar ' + itemList.length + ' solicitação(ões)';
   document.getElementById('confirmOverlay').classList.add('show');
 }
-function closeConfirm() { document.getElementById('confirmOverlay').classList.remove('show'); }
-async function enviarConfirmado() { closeConfirm(); await enviarTodos(); }
+window.closeConfirm = function() { document.getElementById('confirmOverlay').classList.remove('show'); }
+window.enviarConfirmado = async function() { closeConfirm(); await enviarTodos(); }
 
 async function enviarTodos() {
   if (itemList.length === 0) { showToast('Adicione ao menos um item.','warn'); return; }
@@ -1088,7 +1088,7 @@ function showToast(msg, type) {
 }
 
 // ── MOBILE TAB NAVIGATION ────────────────────────────────────────────────────
-function switchTab(tab) {
+window.switchTab = function(tab) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tab-item').forEach(b => b.classList.remove('active'));
   if (tab === 'form') {
