@@ -632,8 +632,16 @@ window.doLogin = function() {
   if (!nome || !pin) { err.textContent='Preencha nome e PIN.'; err.style.display='block'; return; }
   if (!/^\d{4,6}$/.test(pin)) { err.textContent='PIN deve ter 4 a 6 dígitos.'; err.style.display='block'; return; }
   const users = getLocalUsers();
+  console.log('Users found:', users.length, users.map(u=>u.nome));
   const user  = users.find(u => u.nome.toUpperCase() === nome && u.pin === pin);
-  if (!user) { err.textContent='Nome ou PIN incorretos. Se for primeiro acesso, clique em "Criar PIN".'; err.style.display='block'; return; }
+  if (!user) {
+    if (users.length === 0) {
+      err.textContent='Nenhum usuário cadastrado. Clique em "Primeiro acesso" para criar seu PIN.';
+    } else {
+      err.textContent='Nome ou PIN incorretos. Se for primeiro acesso, clique em "Criar PIN".';
+    }
+    err.style.display='block'; return;
+  }
   currentUser = user; err.style.display = 'none';
   document.getElementById('loginOverlay').style.display = 'none';
   document.getElementById('loadingScreen').style.display = 'flex';
