@@ -594,7 +594,7 @@ let itemList = [], unsubscribe = null;
 
 // ── SCREEN NAV ────────────────────────────────────────────────────────────────
 window.showScreen = function(id) {
-  document.querySelectorAll('.lscreen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   ['login_err','reg_err','reg_ok','rst_err','rst_ok'].forEach(e => {
     const el = document.getElementById(e); if (el) el.style.display = 'none';
