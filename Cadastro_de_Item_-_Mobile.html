@@ -575,7 +575,9 @@ function renderDup(results){
   for(const{item}of results){
     const el=document.createElement('div'); el.className='similar-item';
     const q=item[6]!==undefined?item[6]:0;
-    const st=q>0?`<span style="color:#166534;font-weight:700;background:#dcfce7;border:1px solid #bbf7d0;border-radius:4px;padding:1px 7px;font-size:11px">Em estoque: ${q}</span>`:`<span style="color:#991b1b;font-weight:700;background:#fee2e2;border:1px solid #fecaca;border-radius:4px;padding:1px 7px;font-size:11px">Sem estoque</span>';
+    const st=q>0
+      ? '<span style="color:#166534;font-weight:700;background:#dcfce7;border:1px solid #bbf7d0;border-radius:4px;padding:1px 7px;font-size:11px">Em estoque: '+q+'</span>'
+      : '<span style="color:#991b1b;font-weight:700;background:#fee2e2;border:1px solid #fecaca;border-radius:4px;padding:1px 7px;font-size:11px">Sem estoque</span>';
 
 // ── FIREBASE (compat) ────────────────────────────────────────────────────────
 firebase.initializeApp({
